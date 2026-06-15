@@ -1,0 +1,6 @@
+{
+  "name": "GymPass UA",
+  "description": "Сучасний сервіс єдиного абонемента в сотні спортклубів, басейнів та студій України. Твій пропуск у світ здоров'я.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
