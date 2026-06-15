@@ -15,6 +15,7 @@ import { UserStats } from "./components/UserStats";
 import { AiAssistant } from "./components/AiAssistant";
 import { MobileFrame } from "./components/MobileFrame";
 import { CommunityChat } from "./components/CommunityChat";
+import { motion, AnimatePresence } from "motion/react";
 import { 
   Search, ShieldCheck, MapPin, Calendar, Clock, Phone, Dumbbell, Award, 
   User, Compass, Sparkles, QrCode, Filter, ChevronRight, CheckCircle2, 
@@ -844,10 +845,18 @@ export default function App() {
 
   return (
     <MobileFrame activeTab={activeTab} setActiveTab={setActiveTab} userTier={userProfile.currentTier}>
-      
-      {/* 1. HOME TAB */}
-      {activeTab === "home" && (
-        <div id="tab-content-home" className="space-y-5 animate-fade-in">
+      <AnimatePresence mode="wait">
+        {/* 1. HOME TAB */}
+        {activeTab === "home" && (
+        <motion.div
+          key="tab-home"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -15 }}
+          transition={{ duration: 0.35, ease: "easeOut" }}
+          id="tab-content-home"
+          className="space-y-5"
+        >
           {/* Header greetings */}
           <div className="flex justify-between items-center bg-neutral-900 border border-neutral-800 p-4 rounded-3xl shadow-md">
             <div className="flex items-center gap-3">
@@ -871,7 +880,7 @@ export default function App() {
             
             <button
               id="active-badge-home"
-              onClick={() => setActiveTab("profile")}
+              onClick={() => setActiveTab("subscription")}
               className="text-[10px] font-black uppercase bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 px-2.5 py-1.5 rounded-2xl flex items-center gap-1 active:scale-95 cursor-pointer"
             >
               <ShieldCheck size={11} /> {userProfile.currentTier || "Без підписки"}
@@ -1034,12 +1043,20 @@ export default function App() {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* 2. EXPLORE CATALOG TAB */}
       {activeTab === "explore" && (
-        <div id="tab-content-explore" className="space-y-5 animate-fade-in">
+        <motion.div
+          key="tab-explore"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -15 }}
+          transition={{ duration: 0.35, ease: "easeOut" }}
+          id="tab-content-explore"
+          className="space-y-5"
+        >
           {/* Page header */}
           <div>
             <span className="text-[10px] text-neutral-400 uppercase tracking-widest font-black font-mono">Спортивні Локації</span>
@@ -1146,12 +1163,20 @@ export default function App() {
               </div>
             )}
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* 4.10. SPORTS NUTRITION & FITNESS BAR TAB */}
       {activeTab === "bar" && (
-        <div id="tab-content-bar" className="space-y-6 animate-fade-in font-sans">
+        <motion.div
+          key="tab-bar"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -15 }}
+          transition={{ duration: 0.35, ease: "easeOut" }}
+          id="tab-content-bar"
+          className="space-y-6 font-sans"
+        >
           
           {/* Header & Wallet Banner */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -1541,12 +1566,20 @@ export default function App() {
 
           </div>
 
-        </div>
+        </motion.div>
       )}
 
       {/* 3. QR CODE SCANNER CHECK-IN TAB */}
       {activeTab === "qr" && (
-        <div id="tab-content-qr" className="space-y-5 animate-fade-in">
+        <motion.div
+          key="tab-qr"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -15 }}
+          transition={{ duration: 0.35, ease: "easeOut" }}
+          id="tab-content-qr"
+          className="space-y-5"
+        >
           <div>
             <span className="text-[10px] text-neutral-400 uppercase tracking-widest font-black font-mono">Рецепція Клубу</span>
             <h2 className="text-lg font-black text-neutral-105">Єдиний UA Абонемент</h2>
@@ -1559,6 +1592,7 @@ export default function App() {
             selectedGymForQr={selectedGymForScanner}
             onCheckInSuccess={handleCheckInSuccess}
             lessonsRemaining={userProfile.balanceLessons}
+            onNavigateToSubscription={() => setActiveTab("subscription")}
           />
 
           {/* Security details disclosure */}
@@ -1571,12 +1605,20 @@ export default function App() {
               <li>Вітаємо, турнікет відкрито! Гарного тренування! 🏅</li>
             </ul>
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* 4. AI COACH INTUITIVE ADVISER TAB */}
       {activeTab === "coach" && (
-        <div id="tab-content-coach" className="space-y-4 animate-fade-in">
+        <motion.div
+          key="tab-coach"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -15 }}
+          transition={{ duration: 0.35, ease: "easeOut" }}
+          id="tab-content-coach"
+          className="space-y-4"
+        >
           <div className="flex justify-between items-center">
             <div>
               <span className="text-[10px] text-neutral-400 uppercase tracking-widest font-black font-mono">Розумний Персональний AI</span>
@@ -1588,23 +1630,39 @@ export default function App() {
           </div>
 
           <AiAssistant userProfile={userProfile} />
-        </div>
+        </motion.div>
       )}
 
       {/* 4.5. COMMUNITY CHAT AND GROUPS TAB */}
       {activeTab === "chat" && (
-        <div id="tab-content-chat" className="space-y-4 animate-fade-in">
+        <motion.div
+          key="tab-chat"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -15 }}
+          transition={{ duration: 0.35, ease: "easeOut" }}
+          id="tab-content-chat"
+          className="space-y-4"
+        >
           <CommunityChat
             userName={userProfile.name}
             avatarUrl={userProfile.avatarUrl}
             currentCity={userProfile.currentCity}
           />
-        </div>
+        </motion.div>
       )}
 
       {/* 4.8. SUBSCRIPTION MANAGEMENT TAB */}
       {activeTab === "subscription" && (
-        <div id="tab-content-subscription" className="space-y-5 animate-fade-in font-sans">
+        <motion.div
+          key="tab-subscription"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -15 }}
+          transition={{ duration: 0.35, ease: "easeOut" }}
+          id="tab-content-subscription"
+          className="space-y-5 font-sans"
+        >
           <div>
             <span className="text-[10px] text-neutral-400 uppercase tracking-widest font-black font-mono">Мій абонемент</span>
             <h2 className="text-lg font-black text-neutral-105">Керування підпискою</h2>
@@ -1678,12 +1736,20 @@ export default function App() {
             onSelectPackage={handleSelectPackage}
             userName={userProfile.name}
           />
-        </div>
+        </motion.div>
       )}
 
       {/* 5. USER PROFILE & SUBSCRIPTIONS TAB */}
       {activeTab === "profile" && (
-        <div id="tab-content-profile" className="space-y-6 animate-fade-in">
+        <motion.div
+          key="tab-profile"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -15 }}
+          transition={{ duration: 0.35, ease: "easeOut" }}
+          id="tab-content-profile"
+          className="space-y-6"
+        >
           
           {/* User profile parameters container */}
           <div className="bg-neutral-900 border border-neutral-800 p-5 rounded-3xl shadow-sm space-y-4">
@@ -1800,12 +1866,20 @@ export default function App() {
               </div>
             )}
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* 4.9. OTHER APP DESCRIPTION & HELP/SUPPORT TAB */}
       {activeTab === "other" && (
-        <div id="tab-content-other" className="space-y-6 animate-fade-in font-sans">
+        <motion.div
+          key="tab-other"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -15 }}
+          transition={{ duration: 0.35, ease: "easeOut" }}
+          id="tab-content-other"
+          className="space-y-6 font-sans"
+        >
           <div>
             <span className="text-[10px] text-neutral-400 uppercase tracking-widest font-black font-mono">Інформація та підтримка</span>
             <h2 className="text-lg font-black text-neutral-105">Про GymPass UA</h2>
@@ -2108,12 +2182,20 @@ export default function App() {
           <div className="bg-neutral-950 border border-neutral-850 p-4 rounded-3xl text-center text-[10px] text-neutral-500 font-mono">
             GymPass UA • Версія 2.4.0 (Release-Build) • Розроблено для спортивної спільноти України • 2026
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* 4.10. ADMINISTRATIVE APPOINTMENT APPEALS TAB */}
       {activeTab === "admin" && (
-        <div id="tab-content-admin" className="space-y-6 animate-fade-in font-sans">
+        <motion.div
+          key="tab-admin"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -15 }}
+          transition={{ duration: 0.35, ease: "easeOut" }}
+          id="tab-content-admin"
+          className="space-y-6 font-sans"
+        >
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <span className="text-[10px] text-indigo-400 uppercase tracking-widest font-black font-mono">Панель управління</span>
@@ -2382,8 +2464,9 @@ export default function App() {
               ));
             })()}
           </div>
-        </div>
+        </motion.div>
       )}
+      </AnimatePresence>
 
       {/* 6. MODAL DETAILS OVERLAY COMPONENT FOR SPORTS CLUBS */}
       {detailModalGym && (

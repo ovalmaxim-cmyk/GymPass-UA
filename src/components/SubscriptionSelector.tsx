@@ -10,9 +10,10 @@ import {
   Check, Flame, Award, CreditCard, CheckCircle, Plus, Trash2, 
   Lock, RefreshCw, Smartphone, Wallet, ShoppingBag, ShieldCheck, Key, X
 } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
 
 interface SubscriptionSelectorProps {
-  currentTier: "Лайт" | "Стандарт" | "Ультра" | null;
+  currentTier: "Лайт" | "Стандарт" | "Ультра" | "Сімейний" | null;
   onSelectPackage: (pkg: SubscriptionPackage) => void;
   userName?: string;
 }
@@ -516,9 +517,13 @@ export const SubscriptionSelector: React.FC<SubscriptionSelectorProps> = ({
           const isSelected = selectedPlanId === pkg.id;
 
           return (
-            <div
+            <motion.div
               key={pkg.id}
               id={`pkg-card-${pkg.id}`}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              whileHover={{ y: -3, borderColor: isSelected ? "rgb(99, 102, 241)" : "rgba(99, 102, 241, 0.4)" }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
               className={`p-5 rounded-3xl border-2 transition-all duration-350 cursor-pointer flex flex-col justify-between gap-4 ${
                 isActive
                   ? "border-indigo-600 bg-indigo-500/5 shadow-md"
@@ -561,7 +566,7 @@ export const SubscriptionSelector: React.FC<SubscriptionSelectorProps> = ({
               {/* package features */}
               <ul className="space-y-2 pt-2 border-t border-neutral-805">
                 {pkg.features.map((feat, idx) => (
-                  <li key={idx} className="flex items-start gap-2 text-xs text-neutral-305">
+                  <li key={idx} className="flex items-start gap-2 text-xs text-neutral-350">
                     <Check size={12} className="text-indigo-400 shrink-0 mt-0.5" />
                     <span className="line-clamp-2">{feat}</span>
                   </li>
@@ -579,50 +584,66 @@ export const SubscriptionSelector: React.FC<SubscriptionSelectorProps> = ({
                     <span>Активний тариф</span>
                   </button>
                 ) : (
-                  <button
+                  <motion.button
                     id={`btn-buy-${pkg.id}`}
                     onClick={(e) => {
                       e.stopPropagation();
                       handleOpenCheckout(pkg);
                     }}
-                    className={`w-full font-bold text-xs py-3 px-4 rounded-xl transition-all active:scale-95 shadow-sm cursor-pointer ${
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className={`w-full font-bold text-xs py-3 px-4 rounded-xl transition-all shadow-sm cursor-pointer ${
                       isSelected
                         ? "bg-indigo-600 text-white hover:bg-indigo-700"
                         : "bg-neutral-800 text-neutral-300 border border-neutral-750 hover:bg-neutral-750"
                     }`}
                   >
                     Активувати за {pkg.price} грн
-                  </button>
+                  </motion.button>
                 )}
               </div>
-            </div>
+            </motion.div>
           );
         })}
       </div>
 
       {/* DETAILED CHECKOUT MODAL OVERLAY */}
-      {checkoutPkg && (
-        <div className="fixed inset-0 bg-neutral-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-neutral-900 border border-neutral-800 rounded-3xl overflow-hidden max-w-md w-full shadow-2xl animate-scale-up border-indigo-900/40 font-sans text-neutral-100">
-            
-            {/* Header branding */}
-            <div className="p-5 border-b border-neutral-800 flex justify-between items-center bg-neutral-910">
-              <div className="flex items-center gap-2">
-                <ShoppingBag className="text-indigo-400 shrink-0" size={18} />
-                <div>
-                  <h4 className="text-sm font-black text-neutral-100 uppercase tracking-wide">
-                    Оплата GymPass UA
-                  </h4>
-                  <p className="text-[10px] text-neutral-450 mt-0.5">Швидкий та безпечний платіж</p>
+      <AnimatePresence>
+        {checkoutPkg && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-neutral-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto"
+          >
+            <motion.div 
+              initial={{ scale: 0.95, y: 15 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 15 }}
+              transition={{ type: "spring", stiffness: 350, damping: 25 }}
+              className="bg-neutral-900 border border-neutral-800 rounded-3xl overflow-hidden max-w-md w-full shadow-2xl border-indigo-900/40 font-sans text-neutral-100"
+            >
+              
+              {/* Header branding */}
+              <div className="p-5 border-b border-neutral-800 flex justify-between items-center bg-neutral-910">
+                <div className="flex items-center gap-2">
+                  <ShoppingBag className="text-indigo-400 shrink-0" size={18} />
+                  <div>
+                    <h4 className="text-sm font-black text-neutral-100 uppercase tracking-wide">
+                      Оплата GymPass UA
+                    </h4>
+                    <p className="text-[10px] text-neutral-450 mt-0.5">Швидкий та безпечний платіж</p>
+                  </div>
                 </div>
+                <motion.button
+                  onClick={() => setCheckoutPkg(null)}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  className="p-1.5 text-neutral-400 hover:text-white hover:bg-neutral-800 rounded-xl transition-all cursor-pointer"
+                >
+                  <X size={15} />
+                </motion.button>
               </div>
-              <button
-                onClick={() => setCheckoutPkg(null)}
-                className="p-1.5 text-neutral-400 hover:text-white hover:bg-neutral-800 rounded-xl transition-all cursor-pointer"
-              >
-                <X size={15} />
-              </button>
-            </div>
 
             {/* Simulated Payment Stages Content */}
             {paymentStep === "idle" && (
@@ -892,9 +913,10 @@ export const SubscriptionSelector: React.FC<SubscriptionSelectorProps> = ({
               </div>
             )}
 
-          </div>
-        </div>
-      )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Custom Card Deletion Confirmation Modal Area */}
       {cardToDelete && (

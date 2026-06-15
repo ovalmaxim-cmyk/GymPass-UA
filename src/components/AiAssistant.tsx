@@ -6,6 +6,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { ChatMessage, UserProfile } from "../types";
 import { Send, Sparkles, User, Trash2 } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
 
 interface AiAssistantProps {
   userProfile: UserProfile;
@@ -148,49 +149,59 @@ export const AiAssistant: React.FC<AiAssistantProps> = ({ userProfile }) => {
       </div>
 
       {/* Messages wrapper scroll */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0 z-10">
-        {messages.map((msg) => {
-          const isBot = msg.sender === "bot";
-          return (
-            <div
-              key={msg.id}
-              className={`flex items-end gap-2.5 max-w-[85%] ${isBot ? "self-start" : "ml-auto flex-row-reverse"}`}
-            >
-              <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 border text-[10px] ${
-                isBot 
-                  ? "bg-neutral-900 text-neutral-350 border-neutral-800" 
-                  : "bg-indigo-500/10 text-indigo-400 border-indigo-500/20"
-              }`}>
-                {isBot ? "AI" : <User size={10} />}
-              </div>
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0 z-10 select-text">
+        <AnimatePresence initial={false}>
+          {messages.map((msg) => {
+            const isBot = msg.sender === "bot";
+            return (
+              <motion.div
+                key={msg.id}
+                initial={{ opacity: 0, y: 12, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                className={`flex items-end gap-2.5 max-w-[85%] ${isBot ? "self-start" : "ml-auto flex-row-reverse"}`}
+              >
+                <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 border text-[10px] ${
+                  isBot 
+                    ? "bg-neutral-900 text-neutral-350 border-neutral-800" 
+                    : "bg-indigo-500/10 text-indigo-400 border-indigo-500/20"
+                }`}>
+                  {isBot ? "AI" : <User size={10} />}
+                </div>
 
-              <div className={`p-3 rounded-2xl text-xs leading-relaxed shadow-sm ${
-                isBot 
-                  ? "bg-neutral-900 border border-neutral-800 text-neutral-205 rounded-bl-none" 
-                  : "bg-indigo-600 text-white font-semibold rounded-br-none"
-              }`}>
-                {/* Formatted inline blocks of paragraph text */}
-                <div className="whitespace-pre-line">{msg.text}</div>
-                <span className={`text-[8px] mt-1.5 block text-right font-medium font-mono ${isBot ? "text-neutral-500" : "text-indigo-250 opacity-80"}`}>
-                  {msg.timestamp}
-                </span>
-              </div>
-            </div>
-          );
-        })}
+                <div className={`p-3 rounded-2xl text-xs leading-relaxed shadow-sm ${
+                  isBot 
+                    ? "bg-neutral-900 border border-neutral-800 text-neutral-205 rounded-bl-none" 
+                    : "bg-indigo-600 text-white font-semibold rounded-br-none"
+                }`}>
+                  {/* Formatted inline blocks of paragraph text */}
+                  <div className="whitespace-pre-line">{msg.text}</div>
+                  <span className={`text-[8px] mt-1.5 block text-right font-medium font-mono ${isBot ? "text-neutral-500" : "text-indigo-250 opacity-80"}`}>
+                    {msg.timestamp}
+                  </span>
+                </div>
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
 
         {/* typing animation state */}
         {isLoading && (
-          <div className="flex items-end gap-2.5 max-w-[80%]">
+          <motion.div 
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-end gap-2.5 max-w-[80%]"
+          >
             <div className="w-6 h-6 rounded-full bg-neutral-900 text-neutral-350 flex items-center justify-center shrink-0 border border-neutral-800 text-[10px]">
               AI
             </div>
             <div className="bg-neutral-900 border border-neutral-800 p-3 rounded-2xl rounded-bl-none flex items-center gap-1.5 shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-neutral-400 animate-bounce" style={{ animationDelay: "0ms" }} />
-              <span className="w-2 h-2 rounded-full bg-neutral-400 animate-bounce" style={{ animationDelay: "150ms" }} />
-              <span className="w-2 h-2 rounded-full bg-neutral-400 animate-bounce" style={{ animationDelay: "300ms" }} />
+              <span className="w-2 h-2 rounded-full bg-indigo-500 animate-bounce" style={{ animationDelay: "0ms" }} />
+              <span className="w-2 h-2 rounded-full bg-indigo-500 animate-bounce" style={{ animationDelay: "150ms" }} />
+              <span className="w-2 h-2 rounded-full bg-indigo-500 animate-bounce" style={{ animationDelay: "300ms" }} />
             </div>
-          </div>
+          </motion.div>
         )}
         <div ref={messagesEndRef} />
       </div>

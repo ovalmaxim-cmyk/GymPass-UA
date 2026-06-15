@@ -5,6 +5,7 @@
 
 import React, { useState } from "react";
 import { Award, Flame, Calendar, Dumbbell, ShieldCheck, Heart, Sparkles, TrendingUp } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
 
 interface UserStatsProps {
   totalWorkouts: number;
@@ -21,13 +22,13 @@ export const UserStats: React.FC<UserStatsProps> = ({
 
   // Mock weekly training activity for display
   const weeklyData = [
-    { day: "Пн", count: 1, label: "Силове" },
-    { day: "Вт", count: 0, label: "Відпочинок" },
-    { day: "Ср", count: 2, label: "Басейн + Йога" },
-    { day: "Чт", count: 0, label: "Відпочинок" },
-    { day: "Пт", count: 1, label: "Кросфіт" },
-    { day: "Сб", count: 1, label: "Тренажери" },
-    { day: "Нд", count: 0, label: "Відпочинок" },
+    { day: "Пн", count: 1, label: "Силове", height: 80 },
+    { day: "Вт", count: 0, label: "Відпочинок", height: 8 },
+    { day: "Ср", count: 2, label: "Басейн + Йога", height: 144 },
+    { day: "Чт", count: 0, label: "Відпочинок", height: 8 },
+    { day: "Пт", count: 1, label: "Кросфіт", height: 80 },
+    { day: "Сб", count: 1, label: "Тренажери", height: 80 },
+    { day: "Нд", count: 0, label: "Відпочинок", height: 8 },
   ];
 
   const categoryShare = [
@@ -71,9 +72,16 @@ export const UserStats: React.FC<UserStatsProps> = ({
 
   return (
     <div id="user-stats-dashboard" className="space-y-6 font-sans">
-      {/* 3 bento style fast metrics grid counters */}
+      {/* 3 bento style fast metrics grid counters with elegant entrance staggered load info */}
       <div className="grid grid-cols-3 gap-3">
-        <div id="metric-workouts" className="bg-neutral-900 border border-neutral-800 p-3.5 rounded-2xl flex flex-col justify-between shadow-sm">
+        <motion.div 
+          id="metric-workouts" 
+          initial={{ opacity: 0, scale: 0.93, y: 10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          whileHover={{ y: -4, scale: 1.015, borderColor: "rgba(99, 102, 241, 0.2)" }}
+          transition={{ type: "spring", stiffness: 350, damping: 20 }}
+          className="bg-neutral-900 border border-neutral-800 p-3.5 rounded-2xl flex flex-col justify-between shadow-sm cursor-pointer"
+        >
           <Calendar size={16} className="text-neutral-500" />
           <div className="mt-3">
             <span className="text-[9px] text-neutral-400 uppercase font-bold tracking-wider block font-mono">Занять</span>
@@ -81,9 +89,16 @@ export const UserStats: React.FC<UserStatsProps> = ({
               {totalWorkouts}
             </span>
           </div>
-        </div>
+        </motion.div>
 
-        <div id="metric-streak" className="bg-neutral-900 border border-neutral-800 p-3.5 rounded-2xl flex flex-col justify-between shadow-sm">
+        <motion.div 
+          id="metric-streak" 
+          initial={{ opacity: 0, scale: 0.93, y: 10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          whileHover={{ y: -4, scale: 1.015, borderColor: "rgba(249, 115, 22, 0.2)" }}
+          transition={{ type: "spring", stiffness: 350, damping: 20, delay: 0.05 }}
+          className="bg-neutral-900 border border-neutral-800 p-3.5 rounded-2xl flex flex-col justify-between shadow-sm cursor-pointer"
+        >
           <Flame size={16} className="text-orange-500 animate-pulse" />
           <div className="mt-3">
             <span className="text-[9px] text-neutral-400 uppercase font-bold tracking-wider block font-mono">Серія</span>
@@ -91,9 +106,16 @@ export const UserStats: React.FC<UserStatsProps> = ({
               {currentStreak}<span className="text-[10px] text-orange-500 font-bold font-sans">днів</span>
             </span>
           </div>
-        </div>
+        </motion.div>
 
-        <div id="metric-co2" className="bg-neutral-900 border border-neutral-800 p-3.5 rounded-2xl flex flex-col justify-between shadow-sm">
+        <motion.div 
+          id="metric-co2" 
+          initial={{ opacity: 0, scale: 0.93, y: 10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          whileHover={{ y: -4, scale: 1.015, borderColor: "rgba(168, 85, 247, 0.2)" }}
+          transition={{ type: "spring", stiffness: 350, damping: 20, delay: 0.1 }}
+          className="bg-neutral-900 border border-neutral-800 p-3.5 rounded-2xl flex flex-col justify-between shadow-sm cursor-pointer"
+        >
           <TrendingUp size={16} className="text-indigo-400" />
           <div className="mt-3">
             <span className="text-[9px] text-neutral-400 uppercase font-bold tracking-wider block font-mono">XP Накопичено</span>
@@ -101,11 +123,16 @@ export const UserStats: React.FC<UserStatsProps> = ({
               {totalWorkouts * 150}
             </span>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Modern Custom Analytics section with chart toggle tabs */}
-      <div className="bg-neutral-900 border border-neutral-800 p-4 rounded-3xl shadow-sm">
+      <motion.div 
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="bg-neutral-900 border border-neutral-800 p-4 rounded-3xl shadow-sm"
+      >
         <div className="flex justify-between items-center pb-3 border-b border-neutral-805">
           <span className="text-xs font-black text-neutral-100 uppercase tracking-tight">Аналітика активності</span>
           
@@ -137,59 +164,88 @@ export const UserStats: React.FC<UserStatsProps> = ({
 
         {/* Dynamic Graphic layout */}
         <div className="pt-5 h-44 flex items-end justify-center">
-          {activeChartTab === "weekly" ? (
-            <div className="w-full h-full flex items-end justify-between px-2 gap-2">
-              {weeklyData.map((item, idx) => {
-                const heightPercent = item.count === 0 ? "h-2" : item.count === 1 ? "h-20" : "h-36";
-                return (
-                  <div key={idx} className="flex-1 flex flex-col items-center gap-2 group cursor-pointer z-10">
-                    <div className="relative w-full flex justify-center">
-                      {/* Tooltip on hover */}
-                      <span className="absolute -top-7 text-[8px] bg-neutral-950 border border-neutral-800 text-white px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20 font-medium">
-                        {item.label}
+          <AnimatePresence mode="wait">
+            {activeChartTab === "weekly" ? (
+              <motion.div 
+                key="weekly-tab"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+                className="w-full h-full flex items-end justify-between px-2 gap-2"
+              >
+                {weeklyData.map((item, idx) => {
+                  return (
+                    <div key={idx} className="flex-1 flex flex-col items-center gap-2 group cursor-pointer z-10">
+                      <div className="relative w-full flex justify-center">
+                        {/* Tooltip on hover */}
+                        <span className="absolute -top-7 text-[8px] bg-neutral-950 border border-neutral-800 text-white px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20 font-medium font-mono">
+                          {item.label}
+                        </span>
+                        {/* Bar capsule pill utilizing dynamic growth animations */}
+                        <motion.div 
+                          initial={{ height: 0 }}
+                          animate={{ height: item.height }}
+                          transition={{ type: "spring", stiffness: 100, damping: 15, delay: idx * 0.04 }}
+                          className={`w-3.5 rounded-full transition-all duration-300 ${
+                            item.count === 0 
+                              ? "bg-neutral-950" 
+                              : item.count === 1 
+                                ? "bg-indigo-600 shadow-[0_2px_8px_rgba(99,102,241,0.3)] hover:bg-indigo-500" 
+                                : "bg-indigo-500 shadow-[0_2px_12px_rgba(99,102,241,0.5)] hover:bg-indigo-400"
+                          }`} 
+                        />
+                      </div>
+                      <span className="text-[10px] text-neutral-500 font-bold font-mono">
+                        {item.day}
                       </span>
-                      {/* Bar capsule pill */}
-                      <div className={`w-3.5 rounded-full transition-all duration-500 ${heightPercent} ${
-                        item.count === 0 
-                          ? "bg-neutral-950" 
-                          : item.count === 1 
-                            ? "bg-indigo-600 shadow-[0_2px_8px_rgba(99,102,241,0.3)]" 
-                            : "bg-indigo-500 shadow-[0_2px_12px_rgba(99,102,241,0.5)]"
-                      }`} />
                     </div>
-                    <span className="text-[10px] text-neutral-500 font-bold font-mono">
-                      {item.day}
-                    </span>
+                  );
+                })}
+              </motion.div>
+            ) : (
+              <motion.div 
+                key="categories-tab"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+                className="w-full flex flex-col gap-3.5 justify-center h-full"
+              >
+                {categoryShare.map((cat, idx) => (
+                  <div key={idx} className="space-y-1">
+                    <div className="flex justify-between items-center text-[10px] font-bold text-neutral-400">
+                      <span>{cat.name}</span>
+                      <span className={`${cat.text} font-mono font-bold`}>{cat.percentage}%</span>
+                    </div>
+                    <div className="w-full h-2 bg-neutral-950 rounded-full overflow-hidden border border-neutral-850">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: `${cat.percentage}%` }}
+                        transition={{ duration: 0.75, ease: "easeOut", delay: idx * 0.08 }}
+                        className={`h-full ${cat.color} rounded-full`} 
+                      />
+                    </div>
                   </div>
-                );
-              })}
-            </div>
-          ) : (
-            <div className="w-full flex flex-col gap-3 justify-center h-full">
-              {categoryShare.map((cat, idx) => (
-                <div key={idx} className="space-y-1">
-                  <div className="flex justify-between items-center text-[10px] font-bold text-neutral-400">
-                    <span>{cat.name}</span>
-                    <span className={`${cat.text} font-mono font-bold`}>{cat.percentage}%</span>
-                  </div>
-                  <div className="w-full h-2 bg-neutral-950 rounded-full overflow-hidden border border-neutral-850">
-                    <div className={`h-full ${cat.color} rounded-full`} style={{ width: `${cat.percentage}%` }} />
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
-      </div>
+      </motion.div>
 
       {/* Gamification Badges List */}
       <div className="space-y-3 font-medium">
         <h4 className="text-xs font-black text-neutral-100 uppercase tracking-tight">Спортивні досягнення</h4>
         <div className="grid grid-cols-2 gap-3.5">
-          {achievements.map((ach) => (
-            <div
+          {achievements.map((ach, idx) => (
+            <motion.div
               key={ach.id}
               id={`ach-card-${ach.id}`}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: idx * 0.06 }}
+              whileHover={{ scale: 1.02, y: -2 }}
               className={`p-3.5 rounded-2xl border flex flex-col justify-between gap-1.5 transition-all text-xs h-28 ${
                 ach.unlocked
                   ? "bg-indigo-500/5 border-indigo-500/25 text-neutral-100"
@@ -210,7 +266,7 @@ export const UserStats: React.FC<UserStatsProps> = ({
               }`}>
                 +{ach.points} XP
               </span>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
